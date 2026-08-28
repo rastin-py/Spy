@@ -17,6 +17,13 @@ dev = [
     "httpx>=0.27",
 ]
 
+# `app` is the package. `tool` is scripts run by hand and `content` is data, so
+# without this setuptools finds three top-level directories, cannot guess which
+# one is the distribution, and refuses to build at all. It only stayed hidden
+# because the existing virtualenv predates both of the other two.
+[tool.setuptools]
+packages = ["app"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
