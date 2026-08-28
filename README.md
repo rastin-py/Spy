@@ -128,40 +128,75 @@ manifest then disagrees. So the module gets a new namespace *and* our copy of
 its manifest (`android/tapsell/AndroidManifest.xml`). Present in 1.3.0 and
 still in 1.4.0-alpha03; when a release drops the attribute, delete both.
 
-Kotlin incremental compilation is off (`android/gradle.properties`): it cannot
-close its caches for plugin modules on this machine. Full compilation of one
-small plugin costs seconds.
+Kotlin incremental compilation is off (`android/gradle.properties`), which is
+**a Windows workaround and nothing more**: Kotlin cannot close its caches for
+the `tapsell_mediation` module under a path containing a space and a dot. Full
+compilation of one small plugin costs seconds. Delete the line on macOS or
+Linux — it buys nothing there.
 
 ## Testing before anything reaches a store
 
 Nothing here needs a Bazaar account, a domain or a certificate.
 
-**1. Run the server.**
+**1. Run the server.** Leave it running in its own terminal.
 
-```bash
-cd server && SPY_ADMIN_TOKEN=dev-token .venv/Scripts/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```sh
+cd server
+SPY_ADMIN_TOKEN=dev-token .venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8010
 ```
 
-`--host 0.0.0.0` matters: a phone cannot reach a server bound to localhost.
+`--host 0.0.0.0` matters: neither a phone nor the emulator can reach a server
+bound to localhost.
 
-**2. Check every endpoint.**
+Port 8010 rather than the usual 8000 because 8000 is the port every other dev
+server on the machine also wants, and the app says nothing when it reaches the
+wrong one - `UpdateStore.refresh` swallows a bad answer exactly as it is meant
+to. If nothing seems to arrive, check the port is actually yours:
 
-```bash
-cd server && .venv/Scripts/python tool/smoke.py --token dev-token
+```sh
+lsof -nP -iTCP:8010 -sTCP:LISTEN
 ```
 
-**3. Put the app on a phone, pointed at your laptop.** Find the machine's LAN
-address (`ipconfig`), then:
+**2. Check every endpoint.** In a second terminal:
 
-```bash
-flutter run --release --dart-define=SPY_API=http://192.168.1.20:8000 --dart-define=SPY_STORE=bazaar
+```sh
+cd server
+.venv/bin/python tool/smoke.py --token dev-token
 ```
+
+**3a. Run it on the emulator.** The emulator reaches the host machine at the
+fixed address `10.0.2.2` — never `localhost`, which inside the emulator means
+the emulator itself:
+
+```sh
+flutter run --dart-define=SPY_API=http://10.0.2.2:8010 --dart-define=SPY_STORE=bazaar
+```
+
+**3b. Run it on a real phone.** USB debugging on, phone plugged in. Tunnel the
+port down the cable rather than going over the network:
+
+```sh
+adb reverse tcp:8010 tcp:8010
+flutter run --dart-define=SPY_API=http://localhost:8010 --dart-define=SPY_STORE=bazaar
+```
+
+`adb reverse` makes the phone's own `localhost:8010` come out of the laptop's
+8010. No LAN address to look up, nothing to change when the laptop moves to
+another network, and nothing to open in a firewall. Re-run it after unplugging
+the phone - the tunnel does not survive a disconnect, and the symptom is a
+silent no-op. `adb reverse --list` shows whether it is up.
+
+Over Wi-Fi instead, if the cable is not an option: get the laptop's LAN address
+with `ipconfig getifaddr en0` and build against `http://<that-address>:8010`.
+Both machines have to be on the same network, and macOS will ask once for
+permission to accept incoming connections.
 
 Debug builds carry `usesCleartextTraffic` so plain HTTP works on the local
 network (`android/app/src/debug/AndroidManifest.xml`); the release APK does
-not, and never talks anything but HTTPS. For a release build over HTTP on the
-bench, run the debug variant instead — everything except signing behaves the
-same.
+not, and never talks anything but HTTPS. So test against a local server with
+the debug variant — everything except signing behaves the same. To exercise a
+`--release` build on the bench it needs an HTTPS server, or the local server
+reached through a tunnel.
 
 **4. Watch it happen.** The server logs one line per request with the caller's
 build and store, and `/admin?token=dev-token` shows installs, the advert funnel
@@ -304,16 +339,56 @@ Updating is a link, never an install: Bazaar forbids an app installing a build
 itself, and the permission it would need is one a party game has no business
 holding.
 
+## Setting up a new development machine
+
+The repository is machine-independent - no tracked file names a path outside
+it - but four things live outside git and have to be arranged by hand.
+
+**1. The two mirror environment variables.** The easiest thing in this whole
+project to forget, and the failure looks like a network fault rather than a
+missing setting. `pubspec.lock` records its hosts, so a machine without these
+argues with the lock file:
+
+```sh
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+```
+
+Put them in `~/.zshrc`, not in a single shell.
+
+**2. The Android SDK.** `sdkmanager` fetches from `dl.google.com`, which is
+unreachable here (see below), so expect the first-run SDK download to be the
+one genuinely awkward step - either use a VPN for it, or pull the packages
+from a mirror such as `mirrors.cloud.tencent.com/AndroidSDK/` and unzip them
+into the SDK by hand. Needed: platform-tools, build-tools, and the platform
+matching `flutter.compileSdkVersion`. Android Studio also supplies the JDK that
+Gradle and `keytool` should both use.
+
+**3. The secrets git does not carry**, all correctly gitignored:
+`android/spy-release.jks`, `android/key.properties`, `android/keys.properties`.
+Move them over an encrypted channel, never email or chat. The keystore is the
+irreplaceable one - see `android/key.properties.example`.
+
+**4. The server virtualenv.** `server/.venv` holds platform-specific binaries.
+Recreate it rather than copying it.
+
+`server/*.db` is ignored too, so a new machine starts with an empty database.
+That is fine; it holds only development rows.
+
 ## Known environment limits
 
-- This machine gets a 404 from `dl.google.com` for every AGP artifact. Release
-  builds work anyway — `lint { checkReleaseBuilds = false }` in
-  `android/app/build.gradle.kts` skips the one task that needed a download, and
-  correctness is covered by `flutter analyze` plus the test suite.
-- The same unreachable repo is why the app carries no native plugins: every
-  third-party Android plugin pins its own AGP version and none of them resolve.
-  This is the blocker for Tapsell and for store billing, and it is why both are
-  seams rather than implementations.
+- This network gets a 404 from `dl.google.com` for every Maven artifact. The
+  fix is the Aliyun mirrors prepended in `android/build.gradle.kts` and
+  `android/settings.gradle.kts`, which is what made Tapsell - and any future
+  third-party SDK - installable at all. They cover Maven only: the Android SDK
+  itself still comes from Google, which is why setting up a machine is harder
+  than building on one.
+- `lint { checkReleaseBuilds = false }` in `android/app/build.gradle.kts` skips
+  the one release task that still needed a download. Correctness is covered by
+  `flutter analyze` plus the test suite.
+- `kotlin.incremental=false` in `android/gradle.properties` is a **Windows-only**
+  workaround for a file-locking failure in the `tapsell_mediation` module.
+  Delete it on macOS or Linux; it only makes builds slower there.
 
 ## Not built yet
 

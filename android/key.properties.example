@@ -6,6 +6,10 @@
 # Make one with:
 #   keytool -genkey -v -keystore spy-release.jks -keyalg RSA -keysize 2048 \
 #           -validity 10000 -alias spy
+#
+# keytool ships with the JDK and is usually not on PATH. The one that matches
+# the JDK Gradle builds with is inside Android Studio:
+#   /Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool
 
 storeFile=../spy-release.jks
 storePassword=

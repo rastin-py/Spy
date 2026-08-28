@@ -15,18 +15,18 @@ bug.
 ## Running it
 
 ```bash
-python -m venv .venv && .venv/Scripts/pip install -e ".[dev]"
+python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 ```
 
 ```bash
-.venv/Scripts/python -m uvicorn app.main:app --reload --port 8000
+.venv/bin/python -m uvicorn app.main:app --reload --port 8010
 ```
 
 Interactive docs at `/docs`. Tests, which are contract tests rather than
 coverage — each one pins something a phone would break on:
 
 ```bash
-.venv/Scripts/python -m pytest
+.venv/bin/python -m pytest
 ```
 
 ## Checking it works
@@ -35,11 +35,11 @@ coverage — each one pins something a phone would break on:
 download, counters, receipt - and checks the answers rather than just the
 status codes. Standard library only, so it runs anywhere Python does:
 
-```bash
-.venv/Scripts/python tool/smoke.py --token YOUR_ADMIN_TOKEN
+```sh
+.venv/bin/python tool/smoke.py --token YOUR_ADMIN_TOKEN
 ```
 
-Point it at anything: `--url http://192.168.1.20:8000` from another machine on
+Point it at anything: `--url http://192.168.1.20:8010` from another machine on
 the network, or `--url https://api.topazapps.ir` once it is deployed. The pack
 download is verified against the published sha256, which is the check that
 catches a proxy quietly mangling a response.
