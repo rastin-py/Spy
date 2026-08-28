@@ -1,0 +1,31 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      SPY_LOG_FORMAT: json
+      SPY_LOG_LEVEL: INFO
+      SPY_RELEASE: ${SPY_RELEASE:-dev}
+    volumes:
+      # Packs are content, not code: editing a file and restarting is the whole
+      # publishing workflow until there is a reason for more.
+      - ./content:/srv/content:ro
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  caddy_data:
+  caddy_config:

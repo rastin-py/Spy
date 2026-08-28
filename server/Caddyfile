@@ -1,0 +1,16 @@
+# Replace with the real hostname before deploying. Caddy takes out and renews
+# the certificate on its own; there is nothing else to configure for TLS.
+api.example.ir {
+	encode zstd gzip
+
+	reverse_proxy api:8000 {
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	# Caddy's own log is JSON on stdout, which is the same shape the app's
+	# request line uses, so both land in one stream.
+	log {
+		output stdout
+		format json
+	}
+}

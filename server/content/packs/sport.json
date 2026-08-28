@@ -1,0 +1,28 @@
+{
+  "id": "sport",
+  "language": "en",
+  "name": "Sport",
+  "version": 1,
+  "words": [
+    "Penalty shootout", "Own goal", "Photo finish", "Half time", "Referee",
+    "Locker room", "Marathon", "Ski jump", "Sumo ring", "Time trial",
+    "Archery", "Athletics track", "Away end", "Badminton", "Ball boy",
+    "Baseball bat", "Basketball hoop", "Bench press", "Bicycle race", "Bobsleigh",
+    "Boxing ring", "Bunker", "Cheerleader", "Chess clock", "Climbing wall",
+    "Coach", "Corner flag", "Cricket pitch", "Cross country", "Curling stone",
+    "Darts board", "Diving board", "Dressage", "Dugout", "Extra time",
+    "Fencing mask", "Final whistle", "Finish line", "First aid kit", "Fishing net",
+    "Free kick", "Goalkeeper", "Goggles", "Golf caddy", "Gym mat",
+    "Gymnastics beam", "Hat-trick", "High jump", "Hockey stick", "Home crowd",
+    "Hurdle", "Ice rink", "Javelin", "Jersey number", "Judo belt",
+    "Kayak", "Kick-off", "Knockout round", "League table", "Linesman",
+    "Long jump", "Medal ceremony", "Mountain bike", "Net", "Offside",
+    "Olympic torch", "Parallel bars", "Physiotherapist", "Ping-pong", "Pole vault",
+    "Press conference", "Racket", "Relay baton", "Rowing boat", "Rugby scrum",
+    "Running spikes", "Sail", "Scoreboard", "Season ticket", "Shin pad",
+    "Shot put", "Skateboard", "Ski lift", "Snorkel", "Stadium tunnel",
+    "Starting block", "Stopwatch", "Substitute", "Surfboard", "Swimming lane",
+    "Tennis court", "Training ground", "Trophy cabinet", "Warm-up", "Weightlifting",
+    "Wrestling mat", "Yellow card"
+  ]
+}

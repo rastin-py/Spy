@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Not a transliteration of "Spy" - the Persian build calls the game جاسوس
+  everywhere else, and the launcher should agree with it.
+-->
+<resources>
+    <string name="app_name">جاسوس</string>
+</resources>

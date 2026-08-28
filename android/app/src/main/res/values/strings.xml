@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The name under the launcher icon. This one follows the *system* language,
+  not the app's own setting: it is drawn by the launcher, before Spy has run.
+-->
+<resources>
+    <string name="app_name">Spy</string>
+</resources>

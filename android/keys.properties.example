@@ -1,0 +1,5 @@
+# Copy to android/keys.properties. Gitignored; missing keys leave the
+# corresponding feature switched off rather than breaking the build.
+
+# Tapsell dashboard -> your app -> App Key.
+tapsellAppKey=

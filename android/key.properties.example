@@ -1,0 +1,13 @@
+# Copy to android/key.properties and fill in. Never commit the real one, and
+# never lose the keystore it points at - Bazaar and Myket both identify an app
+# by its signature, and a lost key means the listing can never be updated
+# again. Back the .jks up somewhere that is not this machine.
+#
+# Make one with:
+#   keytool -genkey -v -keystore spy-release.jks -keyalg RSA -keysize 2048 \
+#           -validity 10000 -alias spy
+
+storeFile=../spy-release.jks
+storePassword=
+keyAlias=spy
+keyPassword=

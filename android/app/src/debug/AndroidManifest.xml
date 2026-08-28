@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug builds only.
+
+  Android blocks plain HTTP by default, which is right - but it also means a
+  debug build cannot talk to a FastAPI server running on a laptop over the
+  local network, which is exactly how the API gets tested before there is a
+  domain and a certificate.
+
+  This file is merged into debug builds and nothing else. The release APK that
+  goes to Bazaar has no such permission and will only ever talk HTTPS.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:usesCleartextTraffic="true"
+        tools:replace="android:usesCleartextTraffic"/>
+</manifest>

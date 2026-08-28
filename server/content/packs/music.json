@@ -1,0 +1,27 @@
+{
+  "id": "music",
+  "language": "en",
+  "name": "Music",
+  "version": 1,
+  "words": [
+    "Encore", "Soundcheck", "Vinyl record", "Drum solo", "Karaoke bar",
+    "Orchestra pit", "Metronome", "Busker", "Mosh pit", "Lullaby",
+    "Accordion", "Acoustic guitar", "Album cover", "Amplifier", "Anthem",
+    "Backing singer", "Bagpipes", "Ballad", "Banjo", "Bass drum",
+    "Beatbox", "Bow", "Brass band", "Cassette tape", "Cello",
+    "Chart topper", "Choir", "Chord", "Clarinet", "Concert hall",
+    "Conductor", "Cover version", "Cymbal", "Demo tape", "Disc jockey",
+    "Double bass", "Drum kit", "Duet", "Earworm", "Festival wristband",
+    "Flute", "Folk song", "Front row", "Gig poster", "Grand piano",
+    "Guitar pick", "Harmonica", "Harp", "Headliner", "Hit single",
+    "Jam session", "Jazz club", "Jukebox", "Keyboard", "Lead singer",
+    "Loudspeaker", "Lyric sheet", "Mandolin", "Marching band", "Microphone",
+    "Music stand", "National anthem", "Opera house", "Orchestra", "Organ",
+    "Percussion", "Piano tuner", "Playlist", "Practice room", "Radio hit",
+    "Rehearsal", "Rock band", "Roadie", "Saxophone", "Score",
+    "Sheet music", "Singalong", "Snare drum", "Songwriter", "Stage dive",
+    "Street organ", "Studio booth", "Support act", "Symphony", "Tambourine",
+    "Tour bus", "Trombone", "Trumpet", "Tuning fork", "Ukulele",
+    "Violin", "Vocal coach", "Whistling", "Xylophone"
+  ]
+}

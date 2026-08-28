@@ -1,0 +1,25 @@
+<!--
+  A replacement manifest for the `tapsell_mediation` Flutter module.
+
+  The published one declares `package="ir.tapsell.mediation"`, which is the
+  same namespace as Tapsell's own native library (`ir.tapsell:tapsell-flutter`).
+  AGP 8 and later refuse to merge two modules that share a namespace, so the
+  build dies in the manifest merger. Renaming the module's namespace alone is
+  not enough - the legacy `package` attribute then disagrees with it, and AGP
+  rejects that too.
+
+  So the module gets a new namespace and this manifest, which is the published
+  one minus the `package` attribute. Nothing else changes: the meta-data below
+  is what the SDK reads its key from, and `TapsellMediationAppKey` is filled in
+  from android/keys.properties.
+
+  See the override in android/build.gradle.kts. If a future release of the
+  plugin drops the `package` attribute, delete both.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <meta-data
+            android:name="ir.tapsell.mediation.APPLICATION_KEY"
+            android:value="${TapsellMediationAppKey}"/>
+    </application>
+</manifest>

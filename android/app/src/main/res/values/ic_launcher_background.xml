@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- neutral-0. The same near-black as the redaction bar and the handoff
+         screen; the mark is a redaction, so its ground is the ink. -->
+    <color name="ic_launcher_background">#05070A</color>
+</resources>
